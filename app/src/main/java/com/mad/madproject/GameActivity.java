@@ -6,6 +6,8 @@ import android.view.View;
 
 public class GameActivity extends AppCompatActivity {
 
+    SpaceFreeRidersView spaceInvadersView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
