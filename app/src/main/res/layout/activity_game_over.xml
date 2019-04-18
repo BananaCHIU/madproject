@@ -14,7 +14,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="8dp"
-        android:text="Space has been destroyed..."
+        android:text="FreeRider has approached you\nProject has been ruined..."
         android:textAlignment="center"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="30sp"

@@ -1,5 +1,6 @@
 package com.mad.madproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -264,7 +265,10 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
             menaceInterval = menaceInterval - 80;
         }
         if(lost){
-            prepareLevel();
+            Intent intent = new Intent(context, GameOverActivity.class);
+            intent.putExtra("score", score);
+            context.startActivity(intent);
+            finishFunction();
         }
 
         // Update the players bullet
@@ -298,6 +302,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                             Intent intent = new Intent(context, GameWinActivity.class);
                             intent.putExtra("score", score);
                             context.startActivity(intent);
+                            finishFunction();
                         }
                     }
                 }
@@ -317,7 +322,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                         Intent intent = new Intent(context, GameOverActivity.class);
                         intent.putExtra("score", score);
                         context.startActivity(intent);
-
+                        finishFunction();
                     }
                 }
             }
@@ -409,5 +414,9 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                     player.getLength()/2,screenY,bullet.UP)){
                 soundPool.play(shootID, volume, volume, 0, 0, 1);
             }
+    }
+    private void finishFunction() {
+        Activity activity = (Activity)getContext();
+        activity.finish();
     }
 }
