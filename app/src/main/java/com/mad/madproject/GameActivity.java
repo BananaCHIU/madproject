@@ -24,7 +24,7 @@ public class GameActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Initialize gameView and set it as the view
-        spaceFreeRidersView = new SpaceFreeRidersView(this, size.x, size.y);
+        spaceFreeRidersView = new SpaceFreeRidersView(this, size.x, size.y-70);
         setContentView(spaceFreeRidersView);
         myMus = MediaPlayer.create(this, R.raw.game_bgm); // bg sound file “bs” in raw folder
         myMus.setLooping(true); // set loop-playing mode

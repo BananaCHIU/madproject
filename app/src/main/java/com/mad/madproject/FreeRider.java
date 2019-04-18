@@ -63,7 +63,7 @@ public class FreeRider {
                 false);
 
         // How fast is the freeriders in pixels per second
-        shipSpeed = 90;
+        shipSpeed = 120;
     }
 
     public void update(long fps){
