@@ -336,6 +336,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
             canvas.drawBitmap(player.getBitmap(), player.getX(), screenY - 50, paint);
             // Draw the emery
             for(int i = 0; i < numfreeriders; i++){
+                if(freeRiders[i].isVisible)
                 canvas.drawBitmap(freeRiders[i].getBitmap(), freeRiders[i].getX(), freeRiders[i].getY(), paint);
                 }
 
