@@ -61,8 +61,10 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
     // The player
     private Player player;
 
-    // The player's bullet
-    private Bullet bullet;
+    // The player's bullets
+    private Bullet[] playerBullets = new Bullet[200];
+    private int nextPlayerBullet;
+    private int maxplayerBullets = 2;
 
     // The freeriders bullets
     private Bullet[] freeriderBullets = new Bullet[200];
@@ -149,7 +151,9 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
         // Make a new player
         player = new Player(context, screenX, screenY);
         // Prepare the players bullet
-        bullet = new Bullet(screenY);
+        for(int i = 0; i < playerBullets.length; i++) {
+            playerBullets[i] = new Bullet(screenY);
+        }
         // Initialize the Bullets array
         for(int i = 0; i < freeriderBullets.length; i++){
             freeriderBullets[i] = new Bullet(screenY);
@@ -217,7 +221,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                     // If so try and spawn a bullet
                     if(freeriderBullets[nextBullet].shoot(freeRiders[i].getX()
                                     + freeRiders[i].getLength() / 2,
-                            freeRiders[i].getY(), bullet.DOWN)) {
+                            freeRiders[i].getY(), 1)) {
 
                         // Shot fired
                         // Prepare for the next shot
@@ -255,7 +259,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
             for(int i = 0; i < numfreeriders; i++){
                 freeRiders[i].dropDownAndReverse();
                 // Have the invaders landed
-                if(freeRiders[i].getY() > screenY - screenY / 10){
+                if(freeRiders[i].getY() > screenY - screenY / 100){
                     lost = true;
                 }
             }
@@ -272,13 +276,19 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
         }
 
         // Update the players bullet
-        if(bullet.getStatus()){
-            bullet.update(fps);
+        for(int i = 0; i < playerBullets.length; i++){
+            if(playerBullets[i].getStatus()){
+                playerBullets[i].update(fps);
+            }
         }
+
         // Has the player's bullet hit the top of the screen
-        if(bullet.getImpactPointY() < 0){
-            bullet.setInactive();
+        for(int i = 0; i < playerBullets.length; i++){
+            if(playerBullets[i].getImpactPointY() < 0){
+                playerBullets[i].setInactive();
+            }
         }
+
         // Has an emery bullet hit the bottom of the screen
         for(int i = 0; i < freeriderBullets.length; i++){
             if(freeriderBullets[i].getImpactPointY() > screenY){
@@ -286,28 +296,31 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
             }
         }
         // Has the player's bullet hit an emery
-        if(bullet.getStatus()) {
-            for (int i = 0; i < numfreeriders; i++) {
-                if (freeRiders[i].getVisibility()) {
-                    if (RectF.intersects(bullet.getRect(), freeRiders[i].getRect())) {
-                        freeRiders[i].setInvisible();
-                        soundPool.play(freeriderExplodeID, volume, volume, 0, 0, 1);
-                        bullet.setInactive();
-                        score = score + 10;
+        for(int j = 0; j < playerBullets.length; j++) {
+            if (playerBullets[j].getStatus()) {
+                for (int i = 0; i < numfreeriders; i++) {
+                    if (freeRiders[i].getVisibility()) {
+                        if (RectF.intersects(playerBullets[j].getRect(), freeRiders[i].getRect())) {
+                            freeRiders[i].setInvisible();
+                            soundPool.play(freeriderExplodeID, volume, volume, 0, 0, 1);
+                            playerBullets[j].setInactive();
+                            score = score + 10;
 
-                        // Has the player won
-                        if(score == numfreeriders * 10){
-                            paused = true;
-                            lives = 3;
-                            Intent intent = new Intent(context, GameWinActivity.class);
-                            intent.putExtra("score", score);
-                            context.startActivity(intent);
-                            finishFunction();
+                            // Has the player won
+                            if (score == numfreeriders * 10) {
+                                paused = true;
+                                lives = 3;
+                                Intent intent = new Intent(context, GameWinActivity.class);
+                                intent.putExtra("score", score);
+                                context.startActivity(intent);
+                                finishFunction();
+                            }
                         }
                     }
                 }
             }
         }
+
         // Has an emery bullet hit the player
         for(int i = 0; i < freeriderBullets.length; i++){
             if(freeriderBullets[i].getStatus()){
@@ -352,8 +365,10 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                 }
 
             // Draw the players bullet if active
-            if(bullet.getStatus()){
-                canvas.drawRect(bullet.getRect(), paint);
+            for(int i = 0; i < freeriderBullets.length; i++) {
+                if (playerBullets[i].getStatus()) {
+                    canvas.drawRect(playerBullets[i].getRect(), paint);
+                }
             }
             // Draw the emery bullets if active
             for(int i = 0; i < freeriderBullets.length; i++){
@@ -403,17 +418,30 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
         paused = false;
         float x = event.values[0];
         float y = event.values[1];
-            if ((x < -1.5)) {
+            if ((x < -1) && (player.getX()<screenX-120)) {
                 player.setMovementState(player.RIGHT);
-            }else if ((x > 1.5) ) {
+            }else if ((x > 1) &&player.getX()>30 ) {
                 player.setMovementState(player.LEFT);
             }else {
                 player.setMovementState(player.STOPPED);
             }
-            if(bullet.shoot(player.getX()+
-                    player.getLength()/2,screenY,bullet.UP)){
-                soundPool.play(shootID, volume, volume, 0, 0, 1);
+
+        // spawn a bullet
+        if(playerBullets[nextPlayerBullet].shoot(player.getX() +
+                player.getLength() / 2, screenY, playerBullets[nextPlayerBullet].UP)) {
+
+            // Shot fired
+            soundPool.play(shootID, volume, volume, 0, 0, 1);
+            // Prepare for the next shot
+            nextPlayerBullet++;
+
+            // Loop back to the first one if we have reached the last
+            if (nextPlayerBullet == maxplayerBullets) {
+                // This stops the firing of another bullet until one completes its journey
+                // Because if bullet 0 is still active shoot returns false.
+                nextPlayerBullet = 0;
             }
+        }
     }
     private void finishFunction() {
         Activity activity = (Activity)getContext();

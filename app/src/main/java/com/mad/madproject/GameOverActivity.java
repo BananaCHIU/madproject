@@ -19,7 +19,7 @@ public class GameOverActivity extends AppCompatActivity {
         String string = Integer.toString(score);
         TextView tScore = (TextView) findViewById(R.id.over_score);
         Button btn = (Button) findViewById(R.id.btn_home);
-        tScore.setText(string);
+        tScore.setText("Score: "+string);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

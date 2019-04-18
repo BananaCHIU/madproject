@@ -62,8 +62,8 @@ public class FreeRider {
                 (int) (height),
                 false);
 
-        // How fast is the invader in pixels per second
-        shipSpeed = 60;
+        // How fast is the freeriders in pixels per second
+        shipSpeed = 90;
     }
 
     public void update(long fps){
@@ -104,7 +104,7 @@ public class FreeRider {
                 playerShipX + playerShipLength < x + length) || (playerShipX > x && playerShipX < x + length)) {
 
             // A 1 in 500 chance to shoot
-            randomNumber = generator.nextInt(150);
+            randomNumber = generator.nextInt(80);
             if(randomNumber == 0) {
                 return true;
             }
@@ -112,7 +112,7 @@ public class FreeRider {
         }
 
         // If firing randomly (not near the player) a 1 in 5000 chance
-        randomNumber = generator.nextInt(2000);
+        randomNumber = generator.nextInt(700);
         if(randomNumber == 0){
             return true;
         }
