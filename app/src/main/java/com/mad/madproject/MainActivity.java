@@ -12,7 +12,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Intent svc = new Intent(this, BackgroundSoundService.class);
+        startService(svc);
         ImageButton game = (ImageButton) findViewById(R.id.btn_game);
         game.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,5 +1,6 @@
 package com.mad.madproject;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent svc = new Intent(this, BackgroundSoundService.class);
+        stopService(svc);
         // Get a Display object to access screen details
         Display display = getWindowManager().getDefaultDisplay();
         // Load the resolution into a Point object
