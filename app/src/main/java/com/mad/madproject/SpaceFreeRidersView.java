@@ -91,10 +91,6 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
 
     // How menacing should the sound be?
     private long menaceInterval = 1000;
-    // Which menace sound should play next
-    private boolean uhOrOh;
-    // When did we last play a menacing sound
-    private long lastMenaceTime = System.currentTimeMillis();
 
     SensorManager aSensorM; // a sensor manager
     Sensor aAccSensor; // the accelerometer sensor object
@@ -161,8 +157,8 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
 
         // Build an army of freeriders
         numfreeriders = 0;
-        for(int column = 0; column < 6; column ++ ){
-            for(int row = 0; row < 5; row ++ ){
+        for(int column = 0; column < 7; column ++ ){
+            for(int row = 0; row < 6; row ++ ){
                 freeRiders[numfreeriders] = new FreeRider(context, row, column, screenX, screenY);
                 numfreeriders++;
             }
@@ -191,8 +187,6 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
             if (timeThisFrame >= 1) {
                 fps = 1000 / timeThisFrame;
             }
-
-            // We will do something new here towards the end of the project
 
         }
     }

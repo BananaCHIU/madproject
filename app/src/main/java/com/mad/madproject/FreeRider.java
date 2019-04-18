@@ -104,7 +104,7 @@ public class FreeRider {
                 playerShipX + playerShipLength < x + length) || (playerShipX > x && playerShipX < x + length)) {
 
             // A 1 in 500 chance to shoot
-            randomNumber = generator.nextInt(100);
+            randomNumber = generator.nextInt(130);
             if(randomNumber == 0) {
                 return true;
             }
@@ -112,7 +112,7 @@ public class FreeRider {
         }
 
         // If firing randomly (not near the player) a 1 in 5000 chance
-        randomNumber = generator.nextInt(550);
+        randomNumber = generator.nextInt(570);
         if(randomNumber == 0){
             return true;
         }
