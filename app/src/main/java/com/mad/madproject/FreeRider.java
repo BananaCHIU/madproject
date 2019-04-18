@@ -13,8 +13,7 @@ public class FreeRider {
     Random generator = new Random();
 
     // The player ship will be represented by a Bitmap
-    private Bitmap bitmap1;
-    private Bitmap bitmap2;
+    private Bitmap bitmap;
 
     // How long and high our invader will be
     private float length;
@@ -54,17 +53,11 @@ public class FreeRider {
         y = row * (length + padding/4);
 
         // Initialize the bitmap
-        //bitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.invader1);
-        //bitmap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.invader2);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.freerider);
+
 
         // stretch the first bitmap to a size appropriate for the screen resolution
-        bitmap1 = Bitmap.createScaledBitmap(bitmap1,
-                (int) (length),
-                (int) (height),
-                false);
-
-        // stretch the first bitmap to a size appropriate for the screen resolution
-        bitmap2 = Bitmap.createScaledBitmap(bitmap2,
+        bitmap = Bitmap.createScaledBitmap(bitmap,
                 (int) (length),
                 (int) (height),
                 false);
@@ -140,11 +133,7 @@ public class FreeRider {
     }
 
     public Bitmap getBitmap(){
-        return bitmap1;
-    }
-
-    public Bitmap getBitmap2(){
-        return bitmap2;
+        return bitmap;
     }
 
     public float getX(){

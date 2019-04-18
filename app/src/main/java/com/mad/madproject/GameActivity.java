@@ -5,10 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 public class GameActivity extends AppCompatActivity {
 
-    SpaceFreeRidersView spaceInvadersView;
+    SpaceFreeRidersView spaceFreeRidersView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +19,10 @@ public class GameActivity extends AppCompatActivity {
         // Load the resolution into a Point object
         Point size = new Point();
         display.getSize(size);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Initialize gameView and set it as the view
-        spaceInvadersView = new SpaceInvadersView(this, size.x, size.y);
-        setContentView(R.layout.activity_game);
+        spaceFreeRidersView = new SpaceFreeRidersView(this, size.x, size.y);
+        setContentView(spaceFreeRidersView);
     }
 
     // This method executes when the player starts the game
@@ -30,7 +31,7 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
 
         // Tell the gameView resume method to execute
-        spaceInvadersView.resume();
+        spaceFreeRidersView.resume();
     }
 
     // This method executes when the player quits the game
@@ -39,7 +40,7 @@ public class GameActivity extends AppCompatActivity {
         super.onPause();
 
         // Tell the gameView pause method to execute
-        spaceInvadersView.pause();
+        spaceFreeRidersView.pause();
     }
 
 

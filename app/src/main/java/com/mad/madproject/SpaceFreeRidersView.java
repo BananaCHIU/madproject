@@ -6,6 +6,14 @@ import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -13,7 +21,7 @@ import android.view.SurfaceView;
 
 import java.io.IOException;
 
-public class SpaceFreeRidersView extends SurfaceView implements Runnable {
+public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorEventListener {
 
     Context context;
 
@@ -59,16 +67,13 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
     // Up to 60 freeriders
     FreeRider[] freeRiders = new FreeRider[60];
     int numfreeriders = 0;
-/*
+
     // For sound FX
     private SoundPool soundPool;
-    private int playerExplodeID = -1;
-    private int invaderExplodeID = -1;
+    private int freeriderExplodeID = -1;
     private int shootID = -1;
-    private int damageShelterID = -1;
-    private int uhID = -1;
     private int ohID = -1;
-    */
+
 
     // The score
     int score = 0;
@@ -83,6 +88,10 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
     // When did we last play a menacing sound
     private long lastMenaceTime = System.currentTimeMillis();
 
+    SensorManager aSensorM; // a sensor manager
+    Sensor aAccSensor; // the accelerometer sensor object
+
+
     // When the we initialize (call new()) on gameView
     // This special constructor method runs
     public SpaceFreeRidersView(Context context, int x, int y) {
@@ -92,15 +101,15 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
 
         // Make a globally available copy of the context so we can use it in another method
         this.context = context;
-
+        aSensorM = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        aAccSensor = aSensorM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         // Initialize ourHolder and paint objects
         ourHolder = getHolder();
         paint = new Paint();
 
         screenX = x;
         screenY = y;
-        /*
-        // This SoundPool is deprecated but don't worry
+
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
 
         try{
@@ -112,20 +121,8 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
             descriptor = assetManager.openFd("shoot.ogg");
             shootID = soundPool.load(descriptor, 0);
 
-            descriptor = assetManager.openFd("invaderexplode.ogg");
-            invaderExplodeID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("damageshelter.ogg");
-            damageShelterID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("playerexplode.ogg");
-            playerExplodeID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("damageshelter.ogg");
-            damageShelterID = soundPool.load(descriptor, 0);
-
-            descriptor = assetManager.openFd("uh.ogg");
-            uhID = soundPool.load(descriptor, 0);
+            descriptor = assetManager.openFd("freeridersexplode.ogg");
+            freeriderExplodeID = soundPool.load(descriptor, 0);
 
             descriptor = assetManager.openFd("oh.ogg");
             ohID = soundPool.load(descriptor, 0);
@@ -135,15 +132,14 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
             Log.e("error", "failed to load sound files");
 
         }
-        */
+
         prepareLevel();
     }
 
     private void prepareLevel() {
 
         // Here we will initialize all the game objects
-
-        // Make a new playerr
+        // Make a new player
         player = new Player(context, screenX, screenY);
         // Prepare the players bullet
         bullet = new Bullet(screenY);
@@ -270,12 +266,54 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
             bullet.update(fps);
         }
         // Has the player's bullet hit the top of the screen
-
+        if(bullet.getImpactPointY() < 0){
+            bullet.setInactive();
+        }
         // Has an emery bullet hit the bottom of the screen
-
+        for(int i = 0; i < freeriderBullets.length; i++){
+            if(freeriderBullets[i].getImpactPointY() > screenY){
+                freeriderBullets[i].setInactive();
+            }
+        }
         // Has the player's bullet hit an emery
+        if(bullet.getStatus()) {
+            for (int i = 0; i < numfreeriders; i++) {
+                if (freeRiders[i].getVisibility()) {
+                    if (RectF.intersects(bullet.getRect(), freeRiders[i].getRect())) {
+                        freeRiders[i].setInvisible();
+                        soundPool.play(freeriderExplodeID, 1, 1, 0, 0, 1);
+                        bullet.setInactive();
+                        score = score + 10;
 
+                        // Has the player won
+                        if(score == numfreeriders * 10){
+                            paused = true;
+                            score = 0;
+                            lives = 3;
+                            prepareLevel();
+                        }
+                    }
+                }
+            }
+        }
         // Has an emery bullet hit the player
+        for(int i = 0; i < freeriderBullets.length; i++){
+            if(freeriderBullets[i].getStatus()){
+                if(RectF.intersects(player.getRect(), freeriderBullets[i].getRect())){
+                    freeriderBullets[i].setInactive();
+                    lives --;
+                    soundPool.play(ohID, 1, 1, 0, 0, 1);
+                    // Is it game over?
+                    if(lives == 0){
+                        paused = true;
+                        lives = 3;
+                        score = 0;
+                        prepareLevel();
+
+                    }
+                }
+            }
+        }
 
     }
 
@@ -295,14 +333,9 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
             canvas.drawBitmap(player.getBitmap(), player.getX(), screenY - 50, paint);
             // Draw the emery
             for(int i = 0; i < numfreeriders; i++){
-                if(freeRiders[i].getVisibility()) {
-                    if(uhOrOh) {
-                        canvas.drawBitmap(freeRiders[i].getBitmap(), freeRiders[i].getX(), freeRiders[i].getY(), paint);
-                    }else{
-                        canvas.drawBitmap(freeRiders[i].getBitmap2(), freeRiders[i].getX(), freeRiders[i].getY(), paint);
-                    }
+                canvas.drawBitmap(freeRiders[i].getBitmap(), freeRiders[i].getX(), freeRiders[i].getY(), paint);
                 }
-            }
+
             // Draw the players bullet if active
             if(bullet.getStatus()){
                 canvas.drawRect(bullet.getRect(), paint);
@@ -327,6 +360,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
     // If SpaceInvadersActivity is paused/stopped
     // shutdown our thread.
     public void pause() {
+        aSensorM.unregisterListener(this);
         playing = false;
         try {
             gameThread.join();
@@ -339,28 +373,31 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable {
     // If SpaceInvadersActivity is started then
     // start our thread.
     public void resume() {
+        aSensorM.registerListener(this, aAccSensor, SensorManager.SENSOR_DELAY_NORMAL);
         playing = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    // The SurfaceView class implements onTouchListener
-    // So we can override this method and detect screen touches.
     @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
+    public final void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
-            case MotionEvent.ACTION_DOWN:
-
-                break;
-
-            // Player has removed finger from screen
-            case MotionEvent.ACTION_UP:
-
-                break;
-        }
-        return true;
+    @Override
+    public final void onSensorChanged(SensorEvent event) {
+        paused = false;
+        float x = event.values[0];
+        float y = event.values[1];
+            if ((x < -2)) {
+                player.setMovementState(player.RIGHT);
+            }else if ((x > 2) ) {
+                player.setMovementState(player.LEFT);
+            }else {
+                player.setMovementState(player.STOPPED);
+            }
+            if(bullet.shoot(player.getX()+
+                    player.getLength()/2,screenY,bullet.UP)){
+                soundPool.play(shootID, 1, 1, 0, 0, 1);
+            }
     }
 }
