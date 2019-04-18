@@ -31,13 +31,11 @@ public class BackgroundSoundService extends Service {
         }
 
         public void onStart(Intent intent, int startId) {
-            // TODO
 
 
 
         }
         public IBinder onUnBind(Intent arg0) {
-            // TODO Auto-generated method stub
 
             return null;
         }
