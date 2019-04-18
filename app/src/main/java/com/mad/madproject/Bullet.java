@@ -16,7 +16,7 @@ public class Bullet {
     int heading = -1;
     float speed =  900;
 
-    private int width = 1;
+    private int width = 2;
     private int height;
 
     private boolean isActive;

@@ -351,9 +351,9 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
             }
             // Draw the score and remaining lives
             // Change the brush color
-            paint.setColor(Color.argb(255,  249, 129, 0));
-            paint.setTextSize(40);
-            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,50, paint);
+            paint.setColor(Color.argb(255,  255, 255, 255));
+            paint.setTextSize(80);
+            canvas.drawText("Score: " + score + "   Lives: " + lives, 10,80, paint);
 
             // Draw everything to the screen
             ourHolder.unlockCanvasAndPost(canvas);

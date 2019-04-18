@@ -50,7 +50,7 @@ public class FreeRider {
         int padding = screenX / 25;
 
         x = column * (length + padding);
-        y = row * (length + padding/4);
+        y = row * (length + padding/4) + 200;
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.freerider);
