@@ -57,7 +57,7 @@ public class Player {
                 false);
 
         // How fast is the player in pixels per second
-        shipSpeed = 350;
+        shipSpeed = 400;
     }
 
     public RectF getRect(){

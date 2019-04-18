@@ -1,6 +1,7 @@
 package com.mad.madproject;
 
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -10,6 +11,7 @@ import android.view.WindowManager;
 public class GameActivity extends AppCompatActivity {
 
     SpaceFreeRidersView spaceFreeRidersView;
+    MediaPlayer myMus = null; // a field of MediaPlayer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +22,12 @@ public class GameActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         // Initialize gameView and set it as the view
         spaceFreeRidersView = new SpaceFreeRidersView(this, size.x, size.y);
         setContentView(spaceFreeRidersView);
+        myMus = MediaPlayer.create(this, R.raw.game_bgm); // bg sound file “bs” in raw folder
+        myMus.setLooping(true); // set loop-playing mode
     }
 
     // This method executes when the player starts the game
@@ -31,6 +36,7 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
 
         // Tell the gameView resume method to execute
+        if (myMus != null) myMus.start(); // start playing
         spaceFreeRidersView.resume();
     }
 
@@ -40,6 +46,7 @@ public class GameActivity extends AppCompatActivity {
         super.onPause();
 
         // Tell the gameView pause method to execute
+        if (myMus != null) myMus.pause(); // pause playing
         spaceFreeRidersView.pause();
     }
 

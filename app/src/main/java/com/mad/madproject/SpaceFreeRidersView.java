@@ -1,6 +1,7 @@
 package com.mad.madproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -24,6 +25,8 @@ import android.view.SurfaceView;
 import java.io.IOException;
 
 public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorEventListener {
+
+    final private float volume = (float) 0.2;
 
     Context context;
 
@@ -141,6 +144,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
     private void prepareLevel() {
 
         // Here we will initialize all the game objects
+        score = 0 ;
         // Make a new player
         player = new Player(context, screenX, screenY);
         // Prepare the players bullet
@@ -283,16 +287,17 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                 if (freeRiders[i].getVisibility()) {
                     if (RectF.intersects(bullet.getRect(), freeRiders[i].getRect())) {
                         freeRiders[i].setInvisible();
-                        soundPool.play(freeriderExplodeID, 1, 1, 0, 0, 1);
+                        soundPool.play(freeriderExplodeID, volume, volume, 0, 0, 1);
                         bullet.setInactive();
                         score = score + 10;
 
                         // Has the player won
                         if(score == numfreeriders * 10){
                             paused = true;
-                            score = 0;
                             lives = 3;
-                            prepareLevel();
+                            Intent intent = new Intent(context, GameWinActivity.class);
+                            intent.putExtra("score", score);
+                            context.startActivity(intent);
                         }
                     }
                 }
@@ -309,8 +314,9 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
                     if(lives == 0){
                         paused = true;
                         lives = 3;
-                        score = 0;
-                        prepareLevel();
+                        Intent intent = new Intent(context, GameOverActivity.class);
+                        intent.putExtra("score", score);
+                        context.startActivity(intent);
 
                     }
                 }
@@ -392,16 +398,16 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
         paused = false;
         float x = event.values[0];
         float y = event.values[1];
-            if ((x < -2)) {
+            if ((x < -1.5)) {
                 player.setMovementState(player.RIGHT);
-            }else if ((x > 2) ) {
+            }else if ((x > 1.5) ) {
                 player.setMovementState(player.LEFT);
             }else {
                 player.setMovementState(player.STOPPED);
             }
             if(bullet.shoot(player.getX()+
                     player.getLength()/2,screenY,bullet.UP)){
-                soundPool.play(shootID, 1, 1, 0, 0, 1);
+                soundPool.play(shootID, volume, volume, 0, 0, 1);
             }
     }
 }

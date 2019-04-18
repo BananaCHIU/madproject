@@ -63,7 +63,7 @@ public class FreeRider {
                 false);
 
         // How fast is the invader in pixels per second
-        shipSpeed = 40;
+        shipSpeed = 60;
     }
 
     public void update(long fps){
