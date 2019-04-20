@@ -1,17 +1,62 @@
 package com.mad.madproject;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
+
+    Intent svc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        svc = new Intent(this, BackgroundSoundService.class);
+        startService(svc);
+        Button story = (Button)findViewById(R.id.btn_story);
+        ImageButton info = (ImageButton)findViewById(R.id.btn_aboutus);
+        ImageButton game = (ImageButton) findViewById(R.id.btn_game);
+        story.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Story.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Aboutus.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        game.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(svc);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(svc);
+    }
 
     //Full Screen Config
     @Override
