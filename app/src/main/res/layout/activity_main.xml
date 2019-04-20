@@ -10,15 +10,14 @@
     <ImageButton
         android:id="@+id/btn_game"
         android:layout_width="100dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="150dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="70dp"
         android:alpha="0.8"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_story"
         app:srcCompat="@drawable/baseline_play_circle_outline_white_48" />
 
     <TextView
@@ -26,12 +25,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="140dp"
-        android:layout_marginBottom="32dp"
         android:fontFamily="@font/press_start_2p"
         android:text="Space"
         android:textAlignment="center"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,14 +37,14 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginBottom="62dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/press_start_2p"
         android:text="FreeRiders"
         android:textAlignment="center"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btn_aboutus"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.567"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -55,7 +52,7 @@
         android:id="@+id/btn_story"
         android:layout_width="176dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="32dp"
         android:alpha="0.8"
         android:background="@android:color/holo_blue_dark"
         android:fontFamily="@font/press_start_2p"
@@ -65,36 +62,20 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/btn_game"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_aboutus" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="55dp"
+        android:id="@+id/btn_aboutus"
+        android:layout_width="60dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="147dp"
         android:alpha="0.6"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_info_black_48" />
 
-    <Button
-        android:id="@+id/btn_aboutus"
-        android:layout_width="174dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="9dp"
-        android:background="@android:color/holo_blue_dark"
-        android:fontFamily="@font/press_start_2p"
-        android:text="AboutUs"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_story"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 </android.support.constraint.ConstraintLayout>

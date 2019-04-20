@@ -87,7 +87,7 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
     int score = 0;
 
     // Lives
-    private int lives = 3;
+    private int lives = 4;
 
     // How menacing should the sound be?
     private long menaceInterval = 1000;
@@ -412,9 +412,9 @@ public class SpaceFreeRidersView extends SurfaceView implements Runnable,SensorE
         paused = false;
         float x = event.values[0];
         float y = event.values[1];
-            if ((x < -1) && (player.getX()<screenX-120)) {
+            if ((x < -1) && (player.getX()<screenX-screenX/10)) {
                 player.setMovementState(player.RIGHT);
-            }else if ((x > 1) &&player.getX()>30 ) {
+            }else if ((x > 1) &&(player.getX()>(screenX/20) ) ){
                 player.setMovementState(player.LEFT);
             }else {
                 player.setMovementState(player.STOPPED);

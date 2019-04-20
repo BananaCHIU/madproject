@@ -50,7 +50,7 @@ public class FreeRider {
         int padding = screenX / 25;
 
         x = column * (length + padding);
-        y = row * (length + padding/4) + 200;
+        y = row * (length + padding/4) + screenY/15;
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.freerider);
@@ -63,7 +63,7 @@ public class FreeRider {
                 false);
 
         // How fast is the freeriders in pixels per second
-        shipSpeed = 120;
+        shipSpeed = 100;
     }
 
     public void update(long fps){
@@ -92,7 +92,7 @@ public class FreeRider {
 
         y = y + height;
 
-        shipSpeed = shipSpeed * 1.18f;
+        shipSpeed = shipSpeed * 1.15f;
     }
 
     public boolean takeAim(float playerShipX, float playerShipLength){
@@ -104,7 +104,7 @@ public class FreeRider {
                 playerShipX + playerShipLength < x + length) || (playerShipX > x && playerShipX < x + length)) {
 
             // A 1 in 500 chance to shoot
-            randomNumber = generator.nextInt(130);
+            randomNumber = generator.nextInt(200);
             if(randomNumber == 0) {
                 return true;
             }
@@ -112,7 +112,7 @@ public class FreeRider {
         }
 
         // If firing randomly (not near the player) a 1 in 5000 chance
-        randomNumber = generator.nextInt(570);
+        randomNumber = generator.nextInt(600);
         if(randomNumber == 0){
             return true;
         }

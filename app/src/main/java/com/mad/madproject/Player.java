@@ -45,7 +45,7 @@ public class Player {
 
         // Start player in roughly the screen centre
         x = screenX / 2;
-        y = screenY - 20;
+        y = screenY - screenY/20;
 
         // Initialize the bitmap
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player);
